@@ -1,35 +1,19 @@
-import { Fab, Stack } from "@mui/material";
-import PostCard from "./components/PostCard";
-import CreateCard from "./components/CreateCard";
-
-const POSTS = [
-  {
-    name: "bob",
-    text: "apple",
-  },
-  {
-    name: "alice",
-    text: "pear",
-  },
-  {
-    name: "carl",
-    text: "orange",
-  },
-  {
-    name: "richard",
-    text: "mango",
-  },
-];
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./pages/Main";
+import Login from "./pages/Login";
+import NoPage from "./pages/Nopage";
 
 function App() {
   return (
     <>
-      <Stack gap={"10px"} marginX={"auto"} width={"60vw"}>
-        {POSTS.map(({ name, text }) => (
-          <PostCard name={name} text={text} />
-        ))}
-      </Stack>
-      <CreateCard />
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<Home />} />
+          <Route path="./home" element={<Home />} />
+          <Route path="./login" element={<Login />} />
+          <Route path="*" element={<NoPage />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
