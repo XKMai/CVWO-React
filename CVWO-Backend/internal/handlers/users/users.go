@@ -5,23 +5,19 @@ import (
 
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/XKMai/CVWO-React/CVWO-Backend/internal/models"
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 type UserHandler struct {
-	db *gorm.DB
 }
 
 
 
 func (b *UserHandler) ListUsers(w http.ResponseWriter, r *http.Request) {
-	db, err := gorm.Open(postgres.Open("cvwo_db"), &gorm.Config{})
-	if err != nil {log.Fatalf("Failed to connect to the database: %v", err)}
+	db := r.Context().Value("db").(*gorm.DB)
 	fmt.Println("ListUsers")
 	var users []models.User
 	// Get all records
@@ -44,8 +40,7 @@ func (b *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (b *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
-	db, err := gorm.Open(postgres.Open("cvwo_db"), &gorm.Config{})
-	if err != nil {log.Fatalf("Failed to connect to the database: %v", err)}
+	db := r.Context().Value("db").(*gorm.DB)
 	fmt.Println("CreateUsers")
 	result := db.Create(&models.User{ID: 1, Role:"User", Name: "Xin Kai", Password: "password"})
 	w.Header().Set("Content-Type", "application/json")
