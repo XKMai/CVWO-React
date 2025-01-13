@@ -4,16 +4,25 @@ import (
 	"fmt"
 	"log"
 
+	//"github.com/XKMai/CVWO-React/CVWO-Backend/internal/handlers/users"
+	"github.com/XKMai/CVWO-React/CVWO-Backend/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func SetupDatabase(){
-	  dsn := "host=localhost user=postgres password=cvwo dbname=cvwo_db port=5432 sslmode=disable TimeZone=Asia/Shanghai"
-	  db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+var db *gorm.DB
+
+func SetupDatabase() *gorm.DB {
+	dsn := "host=localhost user=postgres password=cvwo dbname=cvwo_db port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	  if err != nil {
 		log.Fatalf("Failed to connect to the database: %v", err)
 	}
-	fmt.Println("Database connection established!")
-	
+	fmt.Println("Database connection established!")	
+	db.AutoMigrate(&models.User{}, &models.Post{})
+	return db
+}
+
+func GetUser(name string) string {
+	return "test"
 }
