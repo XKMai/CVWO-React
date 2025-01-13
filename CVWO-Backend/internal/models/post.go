@@ -10,7 +10,8 @@ type Post struct {
 	Title    string `json:"title"`
 	Content  string `json:"content"`
 	Category string `json:"category"` //Can have multiple categories
-	User    User   `json:"owner"`
+	UserID   uint   `json:"-"`
+	User     User   `json:"user,omitempty" gorm:"foreignKey:UserID"`
 	Datetime string `json:"date_time"`
 	Score    uint   `json:"score"`
 }
