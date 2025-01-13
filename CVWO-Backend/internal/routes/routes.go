@@ -5,7 +5,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func UserRoutes() (chi.Router) {
+func UserRoutes() chi.Router {
 	r := chi.NewRouter()
 	userhandler := users.UserHandler{}
 	r.Get("/", userhandler.ListUsers)
@@ -16,7 +16,7 @@ func UserRoutes() (chi.Router) {
 	return r
 }
 
-// func PostRoutes() (chi.Router) {
+// func PostRoutes() chi.Router {
 // 	r := chi.NewRouter()
 // 	userhandler := posts.PostHandler{}
 // 	r.Get("/", userhandler.ListPosts)
