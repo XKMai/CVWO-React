@@ -10,7 +10,9 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 
-export default function CreateCard() {
+//Used to create a card, includes button and popup
+
+export default function CreatePost() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
