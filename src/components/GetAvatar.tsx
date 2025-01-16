@@ -2,7 +2,7 @@
 
 import { Avatar } from "@mui/material";
 import { User } from "../types/User";
-import DisplayAvatar from "./DisplayAvatar";
+import DisplayUser from "./DisplayUser";
 import { useState } from "react";
 
 interface Props {
@@ -30,7 +30,7 @@ export default function GetAvatar({ user }: Props) {
         {!user.picture && user.name ? user.name.slice(0, 2).toUpperCase() : ""}
       </Avatar>
       {showDialog && (
-        <DisplayAvatar user={user} onClose={() => setShowDialog(false)} />
+        <DisplayUser user={user} onClose={() => setShowDialog(false)} />
       )}
     </>
   );
