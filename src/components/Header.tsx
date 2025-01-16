@@ -9,13 +9,16 @@ export default function header() {
           width: "100vw",
           height: "10vh",
           bgcolor: "#0077B6",
-          alignContent: "center",
-          justifyContent: "center",
+          alignContent: "left",
+          justifyContent: "left",
           display: "flex",
           color: "white",
         }}
       >
-        Header
+        <img
+          src="public/MaiSpace.png"
+          style={{ width: "Auto", height: "Auto" }}
+        />
       </Box>
     </>
   );
