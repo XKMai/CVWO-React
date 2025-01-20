@@ -5,6 +5,8 @@ import { styled } from "@mui/material/styles";
 import header from "../components/Header";
 import { AspectRatio, Margin, Padding } from "@mui/icons-material";
 import SignUp from "../components/SignUp";
+import { Navigate, NavLink, redirect, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
@@ -12,6 +14,8 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 function Login() {
+  const navigate = useNavigate();
+
   return (
     <>
       {header()}
@@ -54,7 +58,14 @@ function Login() {
               <Button>Forget Password?</Button>
             </Grid>
             <Grid style={{ width: "30%" }}>
-              <Button variant="contained" fullWidth>
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={() => Login()}
+                // onClick={() => {
+                //   navigate("/home");
+                // }}
+              >
                 Login
               </Button>
             </Grid>
