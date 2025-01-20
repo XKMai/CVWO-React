@@ -1,10 +1,14 @@
-import { Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import DisplayPost from "../components/DisplayPost";
 import UsePostSearch from "../components/UsePostSearch";
 import { useCallback, useRef, useState } from "react";
-import { Description } from "@mui/icons-material";
+import { Category, Description } from "@mui/icons-material";
 import CreatePost from "../components/CreatePost";
 import header from "../components/Header";
+import { useNavigate } from "react-router-dom";
+import HomeHeader from "../components/HomeHeader";
+import { useAuth0 } from "@auth0/auth0-react";
+import FilterPost from "../components/FilterPost";
 
 const POSTS = [
   {
@@ -85,13 +89,16 @@ const POSTS = [
   },
 ];
 function Home() {
+  const [category, setCategory] = useState("");
   const [query, setQuery] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const { loading, error, posts, hasMore } = UsePostSearch(
     query,
     pageNumber,
-    ""
+    category
   );
+  const navigate = useNavigate();
+  const { logout, user, isAuthenticated } = useAuth0();
 
   const observer = useRef<IntersectionObserver | null>(null);
   const lastPostElementRef = useCallback(
@@ -127,27 +134,30 @@ function Home() {
 
   return (
     <>
-      {header()}
-      {posts.map((book, index) => {
-        if (posts.length === index + 1) {
+      {HomeHeader()}
+      <Box sx={{ paddingTop: "10vh" }}>
+        {FilterPost(category, setCategory)}
+        {posts.map((book, index) => {
+          if (posts.length === index + 1) {
+            return (
+              <div ref={lastPostElementRef} key={book}>
+                {book}
+              </div>
+            );
+          }
           return (
             <div ref={lastPostElementRef} key={book}>
               {book}
             </div>
           );
-        }
-        return (
-          <div ref={lastPostElementRef} key={book}>
-            {book}
-          </div>
-        );
-      })}
-      <Stack gap={"10px"} marginX={"auto"} width={"60vw"}>
-        {POSTS.map((post) => (
-          <DisplayPost post={post} key={post.id} />
-        ))}
-      </Stack>
-      <CreatePost />
+        })}
+        <Stack gap={"10px"} marginX={"auto"} width={"60vw"}>
+          {POSTS.map((post) => (
+            <DisplayPost post={post} key={post.id} />
+          ))}
+        </Stack>
+        <CreatePost />
+      </Box>
     </>
   );
   // return (
