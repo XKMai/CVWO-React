@@ -21,7 +21,7 @@ export default function GetAvatar({ user }: Props) {
       <Avatar
         alt={user.name || "Anonymous"}
         sx={{
-          bgcolor: user.picture ? "transparent" : "blue",
+          bgcolor: "blue",
           cursor: "pointer",
         }}
         src={user.picture || undefined}
