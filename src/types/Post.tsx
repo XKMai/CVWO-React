@@ -10,4 +10,5 @@ export interface Post {
   dateTime: string;
   score: number;
   picture: string;
+  comments: Comment[];
 }

@@ -6,7 +6,6 @@ export interface Comment {
   content: string;
   userId: number;
   user: User;
-  post: Post;
   dateTime: string;
   score: number;
 }
