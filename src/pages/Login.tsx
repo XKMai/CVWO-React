@@ -7,6 +7,7 @@ import { AspectRatio, Margin, Padding } from "@mui/icons-material";
 import SignUp from "../components/SignUp";
 import { Navigate, NavLink, redirect, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import axios from "axios";
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
@@ -15,6 +16,21 @@ const Item = styled(Paper)(({ theme }) => ({
 
 function Login() {
   const navigate = useNavigate();
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post("/login", { username, password });
+      console.log("Login success:", response.data);
+
+      // Redirect to profile or home page on successful login
+      navigate("/home");
+    } catch (err: any) {
+      setError("Invalid credentials. Please try again.");
+    }
+  };
 
   return (
     <>
@@ -42,10 +58,30 @@ function Login() {
               </Typography>
             </Grid>
             <Grid style={{ width: "30%" }} sx={{ mb: 2 }}>
-              <TextField label="Username" variant="outlined" fullWidth />
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="name"
+                name="name"
+                label="Name"
+                type="name"
+                variant="outlined"
+                fullWidth
+              />
             </Grid>
             <Grid style={{ width: "30%" }} sx={{ mb: 0 }}>
-              <TextField label="Password" variant="outlined" fullWidth />
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="password"
+                name="password"
+                label="Password"
+                type="password"
+                variant="outlined"
+                fullWidth
+              />
             </Grid>
             <Grid
               style={{ width: "30%" }}
@@ -61,7 +97,7 @@ function Login() {
               <Button
                 variant="contained"
                 fullWidth
-                onClick={() => Login()}
+                onClick={handleLogin}
                 // onClick={() => {
                 //   navigate("/home");
                 // }}
