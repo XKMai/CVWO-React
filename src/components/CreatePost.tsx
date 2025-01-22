@@ -32,7 +32,7 @@ export default function CreatePost() {
       }
       formData.append("title", title);
       formData.append("content", content);
-      const response = axios.post("/upload", formData);
+      const response = axios.post("/posts", formData); //Post request to posts
       console.log(response);
     } catch (error) {
       console.error(error);
