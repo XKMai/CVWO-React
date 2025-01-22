@@ -9,6 +9,7 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAvatar from "./GetAvatar";
 import { useState } from "react";
+import Logout from "./Logout";
 
 export default function HomeHeader() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -18,6 +19,7 @@ export default function HomeHeader() {
 
   const handleClose = () => {
     setAnchorEl(null);
+    Logout();
   };
   const open = Boolean(anchorEl);
   return (
@@ -33,6 +35,7 @@ export default function HomeHeader() {
           display: "flex",
           color: "white",
           position: "fixed",
+          zIndex: "1",
         }}
       >
         <img
