@@ -3,6 +3,7 @@
 import {
   Box,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
   Grid2,
@@ -14,6 +15,10 @@ import GetAvatar from "./GetAvatar";
 import { User } from "../types/User";
 import { Height, WidthFull } from "@mui/icons-material";
 import DisplayPostCategories from "./DisplayPostCategories";
+import CreateComment from "./CreateComment";
+import UseCommentSearch from "./UseCommentSearch";
+import { useCallback, useRef, useState } from "react";
+import DisplayComment from "./DIsplayComment";
 
 interface Props {
   post: Post;
@@ -22,6 +27,29 @@ interface Props {
 
 export default function DisplayFullPost({ post, onClose }: Props) {
   const user = post.user;
+  const [pageNumber, setPageNumber] = useState(0);
+  const { loading, error, comments, hasMore } = UseCommentSearch(
+    post,
+    pageNumber
+  );
+
+  const observer = useRef<IntersectionObserver | null>(null); // Type useRef for IntersectionObserver
+  const lastPostElementRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      // Type the node parameter
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPageNumber((prevPageNumber) => prevPageNumber + 1);
+        }
+      });
+
+      if (node) observer.current.observe(node); // Observe the node
+    },
+    [loading, hasMore]
+  );
 
   return (
     <Dialog open={true} onClose={onClose} fullWidth maxWidth="md">
@@ -57,13 +85,32 @@ export default function DisplayFullPost({ post, onClose }: Props) {
             }}
             component="img"
             src={post.picture}
-            alt="Post"
+            alt="Picture"
           />
         )}
         <Typography variant="body1" sx={{ marginTop: "16px" }}>
           {post.content}
         </Typography>
+        {comments.map((comment, index) => {
+          // If this is the last comment, assign the observer ref
+          if (comments.length === index + 1) {
+            return (
+              <div ref={lastPostElementRef} key={comment.id}>
+                <DisplayComment comment={comment} />
+              </div>
+            );
+          } else {
+            return (
+              <div key={post.id}>
+                <DisplayComment comment={comment} />
+              </div>
+            );
+          }
+        })}
       </DialogContent>
+      <DialogActions>
+        <CreateComment post={post} />
+      </DialogActions>
     </Dialog>
   );
 }
