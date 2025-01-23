@@ -8,5 +8,6 @@ type User struct {
 	Role     string `json:"role"`
 	Name     string `json:"name"`
 	Password string `json:"password"`
-	Posts    []Post 
+	Picture  byte `json:picture`
+	Description string `json:description`
 }
