@@ -4,16 +4,18 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/XKMai/CVWO-React/CVWO-Backend/internal/router"
 	"github.com/XKMai/CVWO-React/CVWO-Backend/internal/routes"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+type Repository struct{ 
+	DB *gorm.DB
+}
 
 func Setup(db *gorm.DB) chi.Router {
-	DB = db
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(MyMiddleware)
@@ -21,6 +23,8 @@ func Setup(db *gorm.DB) chi.Router {
         w.Write([]byte("OK"))
     })
 	r.Mount("/users", routes.UserRoutes())
+	handler := router.Repository{DB:gorm.DB}
+	r.Get("/",handler.IndexHandler)
 	return r
 }
 
