@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/XKMai/CVWO-React/CVWO-Backend/internal/models"
+	"github.com/go-chi/chi/v5"
 	"gorm.io/gorm"
 )
 
@@ -30,19 +31,9 @@ func (b *UserHandler) ListUsers(w http.ResponseWriter, r *http.Request) {
 
 func (b *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	db := r.Context().Value("db").(*gorm.DB)
+	id := chi.URLParam(r, "id")
 
-	type Input struct {
-		ID     int `json:"ID"`
-	}
-
-	var input Input
-	// Decode the JSON body
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-		http.Error(w, "Invalid input", http.StatusBadRequest)
-		return
-	}
-
-	if err := db.First(&models.User{}, input.ID).Error; err != nil {
+	if err := db.First(&models.User{}, id).Error; err != nil {
 		http.Error(w, "Failed to find user: "+err.Error(), http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(nil)
 		return
@@ -101,16 +92,9 @@ func (b *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 func (b *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	db := r.Context().Value("db").(*gorm.DB)
-	type Input struct {
-		ID     int `json:"ID"`
-	}
-	var input Input
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-		http.Error(w, "Invalid input", http.StatusBadRequest)
-		return
-	}
+	id := chi.URLParam(r, "id")
 
-	if err := db.Delete(&models.User{}, input.ID).Error; err != nil {
+	if err := db.Delete(&models.User{}, id).Error; err != nil {
 		http.Error(w, "Failed to delete user: "+err.Error(), http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(nil)
 		return
