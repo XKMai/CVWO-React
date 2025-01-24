@@ -6,7 +6,6 @@ import (
 
 type Comment struct {
 	gorm.Model
-	ID       uint   `json:"id" gorm:"primaryKey"`
 	Content  string `json:"content"`
 	UserId string  `json:"owner_id"`
 	User    User   `json:"owner"`

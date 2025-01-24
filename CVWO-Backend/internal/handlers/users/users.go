@@ -41,11 +41,40 @@ func (b *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 
 func (b *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	db := r.Context().Value("db").(*gorm.DB)
-	fmt.Println("CreateUsers")
-	result := db.Create(&models.User{ID: 1, Role:"User", Name: "Xin Kai", Password: "password"})
+
+	// Define the input structure
+	type Input struct {
+		Name     string `json:"name"`
+		Password string `json:"password"`
+	}
+
+	var input Input
+	// Decode the JSON body
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
+
+	// Create a new user
+	newUser := models.User{
+		Role:        "User",
+		Name:        input.Name,
+		Password:    input.Password,
+		Picture:     byte(0),
+		Description: "",
+	}
+
+	// Save the user to the database
+	if err := db.Create(&newUser).Error; err != nil {
+		http.Error(w, "Failed to create user: "+err.Error(), http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(nil)
+		return
+	}
+
+	// Respond with the created user
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(result)
+	json.NewEncoder(w).Encode(newUser)
 }
 
 func (b *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {

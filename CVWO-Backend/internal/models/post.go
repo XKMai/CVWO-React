@@ -6,7 +6,6 @@ import (
 
 type Post struct {
 	gorm.Model
-	ID       uint   `json:"id" gorm:"primaryKey"`
 	Title    string `json:"title"`
 	Content  string `json:"content"`
 	Category []string `json:"category"` //Can have multiple categories
