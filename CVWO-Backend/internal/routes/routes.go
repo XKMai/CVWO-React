@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"net/http"
+
 	"github.com/XKMai/CVWO-React/CVWO-Backend/internal/handlers/users"
 	"github.com/go-chi/chi/v5"
 )
@@ -13,6 +15,18 @@ func UserRoutes() chi.Router {
 	r.Get("/{id}", userhandler.GetUser)
 	r.Put("/{id}", userhandler.UpdateUser)
 	r.Delete("/{id}", userhandler.DeleteUser)
+	return r
+}
+
+func HealthCheckRoute() http.Handler {
+	r := chi.NewRouter()
+
+	// Define the health check endpoint
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"status":"healthy"}`))
+	})
+
 	return r
 }
 
