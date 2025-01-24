@@ -18,7 +18,7 @@ import DisplayPostCategories from "./DisplayPostCategories";
 import CreateComment from "./CreateComment";
 import UseCommentSearch from "./UseCommentSearch";
 import { useCallback, useRef, useState } from "react";
-import DisplayComment from "./DIsplayComment";
+import DisplayComment from "./DisplayComment";
 
 interface Props {
   post: Post;
