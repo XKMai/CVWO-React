@@ -10,7 +10,6 @@ import (
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
 
 func SetupDatabase() *gorm.DB {
 	dsn := "host=localhost user=postgres password=Abc123!@# dbname=cvwo_db port=5432 sslmode=disable TimeZone=Asia/Shanghai"
@@ -19,6 +18,6 @@ func SetupDatabase() *gorm.DB {
 		log.Fatalf("Failed to connect to the database: %v", err)
 	}
 	fmt.Println("Database connection established!")	
-	db.AutoMigrate(&models.User{}, &models.Post{},&models.Comment{})
+	db.AutoMigrate(&models.User{})
 	return db
 }
