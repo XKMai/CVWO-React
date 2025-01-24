@@ -12,9 +12,9 @@ func UserRoutes() chi.Router {
 	userhandler := users.UserHandler{}
 	r.Get("/", userhandler.ListUsers)
 	r.Post("/", userhandler.CreateUser)
-	r.Get("/{id}", userhandler.GetUser)
-	r.Put("/{id}", userhandler.UpdateUser)
-	r.Delete("/{id}", userhandler.DeleteUser)
+	r.Get("/{ID}", userhandler.GetUser)
+	r.Put("/{ID}", userhandler.UpdateUser)
+	r.Delete("/{ID}", userhandler.DeleteUser)
 	return r
 }
 

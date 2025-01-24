@@ -29,14 +29,25 @@ func (b *UserHandler) ListUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (b *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("GetUsers")
-	// db := database.GetDB()
-	// id := r.URL.Query().Get("id")
-	// var user database.User
-	// db.First(&user, id)
-	// w.Header().Set("Content-Type", "application/json")
-	// w.WriteHeader(http.StatusOK)
-	// json.NewEncoder(w).Encode(user)
+	db := r.Context().Value("db").(*gorm.DB)
+
+	type Input struct {
+		ID     int `json:"ID"`
+	}
+
+	var input Input
+	// Decode the JSON body
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
+
+	if err := db.First(&models.User{}, input.ID).Error; err != nil {
+		http.Error(w, "Failed to find user: "+err.Error(), http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(nil)
+		return
+	} else {json.NewEncoder(w).Encode(err)}
+
 }
 
 func (b *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -89,11 +100,20 @@ func (b *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (b *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("DeleteUsers")
-	// db := database.GetDB()
-	// id := r.URL.Query().Get("id")
-	// db.Delete(&database.User{}, id)
-	// w.Header().Set("Content-Type", "application/json")
-	// w.WriteHeader(http.StatusOK)
+	db := r.Context().Value("db").(*gorm.DB)
+	type Input struct {
+		ID     int `json:"ID"`
+	}
+	var input Input
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
+
+	if err := db.Delete(&models.User{}, input.ID).Error; err != nil {
+		http.Error(w, "Failed to delete user: "+err.Error(), http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(nil)
+		return
+	}
 }
 
