@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState, useEffect } from "react";
-import Logout from "./Logout";
+import { useNavigate } from "react-router-dom";
 import GetAvatar from "./GetAvatar";
 import GetProfile from "./GetProfile";
 import { User } from "../types/User";
@@ -16,26 +16,40 @@ import { User } from "../types/User";
 export default function HomeHeader() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // Add a loading state
+  const [loading, setLoading] = useState<boolean>(true);
 
+  const navigate = useNavigate();
+
+  // Open/Close the menu
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+  const handleClose = () => setAnchorEl(null);
 
-  const handleClose = () => {
+  // Logout logic
+  const handleLogout = () => {
+    // Close the menu first
     setAnchorEl(null);
-    Logout();
+
+    // Clear JWT tokens
+    localStorage.setItem("authToken", "");
+    localStorage.setItem("refreshToken", "");
+    localStorage.setItem("userID", "");
+
+    // Redirect to login page
+    navigate("/login");
   };
 
+  // Fetch user on mount
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const profile = await GetProfile(); // Fetch the user profile
-        setUser(profile); // Set the fetched user
+        const profile = await GetProfile();
+        setUser(profile);
       } catch (error) {
         console.error("Error fetching user profile:", error);
       } finally {
-        setLoading(false); // Stop loading after fetching is complete
+        setLoading(false);
       }
     };
     fetchUser();
@@ -66,19 +80,22 @@ export default function HomeHeader() {
           alt="MaiSpace Logo"
           style={{ height: "100%" }}
         />
+
+        {/* Spacer to push the avatar and menu button to the right */}
         <Box sx={{ flexGrow: 1 }} />
+
         {loading ? (
-          // Show a loading indicator while the user is being fetched
           <CircularProgress color="inherit" size={24} />
         ) : (
-          // Conditionally render the GetAvatar component only when user is available
           <GetAvatar user={user} />
         )}
+
         <IconButton onClick={handleClick}>
           <MoreVertIcon />
         </IconButton>
+
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-          <MenuItem onClick={handleClose}>Logout</MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
       </Box>
     </>
