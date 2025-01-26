@@ -8,24 +8,33 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Post } from "../types/Post";
 import ReplyIcon from "@mui/icons-material/Reply";
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "./AxiosInstance";
 
 interface Props {
-  post: Post;
+  post_id: number;
 }
 
-const CreateComment: React.FC<Props> = ({ post }) => {
+const CreateComment: React.FC<Props> = ({ post_id }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [content, setContent] = useState("");
+
+  const userID = parseInt(localStorage.getItem("userID"));
+
   const handleClick = () => {
-    axios
-      .post("/api/protected/comments", { postID: post.ID, content: content })
-      .then()
+    axiosInstance
+      .post("/api/protected/comments", {
+        content: content,
+        post_id: post_id,
+        user_id: userID,
+      })
+      .then((r) => {
+        console.log(r);
+        handleClose();
+      })
       .catch((err) => {
         return console.error(err);
       });
