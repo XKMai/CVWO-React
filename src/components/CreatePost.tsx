@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Fab,
   Modal,
@@ -10,7 +9,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import UploadButton from "./UploadButton";
-import axios from "axios";
+import axiosInstance from "./AxiosInstance";
 
 //Used to create a card, includes button and popup
 
@@ -23,20 +22,29 @@ export default function CreatePost() {
   const [content, setContent] = useState("");
   const formData = new FormData();
   const handleClick = () => {
-    try {
-      if (!formData.has("file")) {
-        formData.append("file", "");
-      }
-      if (!formData.has("category")) {
-        formData.append("category", category);
-      }
-      formData.append("title", title);
-      formData.append("content", content);
-      const response = axios.post("/posts", formData); //Post request to posts
-      console.log(response);
-    } catch (error) {
-      console.error(error);
+    if (!formData.has("picture")) {
+      formData.append("picture", "");
     }
+    const userID = localStorage.getItem("userID");
+    const data = {
+      picture: "",
+      category,
+      title,
+      content,
+      user_id: parseInt(userID, 10),
+    };
+    console.log(data);
+    const response = axiosInstance
+      .post("/api/protected/posts", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        handleClose();
+      })
+      .catch((err) => console.log(err)); //Post request to posts
   };
 
   return (

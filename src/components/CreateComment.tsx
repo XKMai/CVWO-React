@@ -5,17 +5,13 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  Modal,
-  Paper,
   TextField,
   Typography,
 } from "@mui/material";
-import Grid from "@mui/material/Grid2";
 import { Post } from "../types/Post";
 import ReplyIcon from "@mui/icons-material/Reply";
 import { useState } from "react";
 import axios from "axios";
-import GetAvatar from "./GetAvatar";
 
 interface Props {
   post: Post;
@@ -28,7 +24,7 @@ const CreateComment: React.FC<Props> = ({ post }) => {
   const [content, setContent] = useState("");
   const handleClick = () => {
     axios
-      .post("/comment", { post: post, content: content })
+      .post("/api/protected/comments", { postID: post.ID, content: content })
       .then()
       .catch((err) => {
         return console.error(err);

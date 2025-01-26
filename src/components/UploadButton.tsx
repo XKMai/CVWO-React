@@ -19,7 +19,7 @@ export default function UploadButton(formData: FormData) {
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    if (formData.has("file")) {
+    if (formData.has("picture")) {
       setErrorMessage("File already uploaded.");
       return;
     }
@@ -35,7 +35,7 @@ export default function UploadButton(formData: FormData) {
       return;
     }
 
-    formData.append("file", file);
+    formData.append("picture", file);
     setSuccessMessage("File Uploaded!");
   };
   // setErrorMessage("");
