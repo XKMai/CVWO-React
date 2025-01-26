@@ -1,41 +1,49 @@
-import { Category, Filter } from "@mui/icons-material";
-import axios from "axios";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import axiosInstance from "./AxiosInstance";
 import { Comment } from "../types/Comment";
-import { Post } from "../types/Post";
 
+/**
+ * Custom hook to load comments for a given postID, with pagination (pageNumber).
+ */
 export default function UseCommentSearch(postID: number, pageNumber: number) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
   const [hasMore, setHasMore] = useState(false);
+
+  // Whenever the post changes, reset comments so we don't mix them
+  useEffect(() => {
+    setComments([]);
+  }, [postID]);
 
   useEffect(() => {
     setLoading(true);
     setError(false);
-    let cancel;
-    // setComments((prevComments) => {
-    //   return [...prevComments, ...COMMENTS[pageNumber]];
-    // });
-    // setHasMore(COMMENTS.length - 1 > pageNumber);
-    // setLoading(false);
-    axios({
-      method: "GET",
-      url: "/api/protected/comments/",
-      params: { page: pageNumber, postID: postID },
-      cancelToken: new axios.CancelToken((c) => (cancel = c)),
-    })
-      .then((res) => {
-        setComments((prevComments) => {
-          return [...prevComments, ...res.data.docs];
-        });
-        setHasMore(res.data.docs.length > 0);
-        setLoading(false);
-        console.log(res.data);
+
+    let cancel: (() => void) | undefined;
+    axiosInstance
+      .get<Comment[]>("/api/protected/comments", {
+        params: { post_id: postID, page: pageNumber },
+        cancelToken: new axios.CancelToken((c) => (cancel = c)),
       })
-      .catch((e) => {
-        if (axios.isCancel(e)) return setError(true);
+      .then((res) => {
+        // Append new comments to existing ones
+        setComments((prev) => [...prev, ...res.data]);
+        // If we got some data back, assume more might exist
+        setHasMore(res.data.length > 0);
+        setLoading(false);
+      })
+      .catch((err) => {
+        if (axios.isCancel(err)) return; // Request was canceled
+        setError(true);
       });
-  }, [pageNumber]);
+
+    // Cleanup the request on component unmount or effect re-run
+    return () => {
+      if (cancel) cancel();
+    };
+  }, [postID, pageNumber]);
+
   return { loading, error, comments, hasMore };
 }
