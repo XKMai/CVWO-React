@@ -1,24 +1,27 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { User } from "../types/User";
+import axiosInstance from "./AxiosInstance";
 
-interface ProfileData {
-  message: string;
-}
+export default async function GetProfile(): Promise<User | null> {
+  const userID = localStorage.getItem("userID");
 
-export default function GetProfile() {
-  const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  // Handle case where userID is not found
+  if (!userID) {
+    console.error("No user ID found in localStorage");
+    return null;
+  }
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await axios.get("/profile");
-        setProfileData(response.data);
-      } catch (error) {
-        console.error("Error fetching profile", error);
-      }
-    };
-    fetchProfile();
-  }, []);
+  try {
+    // Make an HTTP GET request to fetch the user profile
+    const response = await axiosInstance.get<User>(
+      `/api/protected/users/${userID}`
+    );
 
-  return profileData;
+    // Return the user profile
+    const user: User = response.data;
+    return user;
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    return null;
+  }
 }
