@@ -1,16 +1,8 @@
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import {
-  IconButton,
-  LinearProgress,
-  TextField,
-  Typography,
-  Box,
-} from "@mui/material";
-import axios from "axios";
+import { IconButton, Typography, Box } from "@mui/material";
 import { useState } from "react";
 
 export default function UploadButton(formData: FormData) {
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
