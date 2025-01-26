@@ -2,9 +2,7 @@ import { Box, Stack } from "@mui/material";
 import DisplayPost from "../components/DisplayPost";
 import UsePostSearch from "../components/UsePostSearch";
 import { useCallback, useRef, useState } from "react";
-import { Category, Description } from "@mui/icons-material";
 import CreatePost from "../components/CreatePost";
-import header from "../components/Header";
 import { useNavigate } from "react-router-dom";
 import HomeHeader from "../components/HomeHeader";
 import FilterPost from "../components/FilterPost";
@@ -48,13 +46,13 @@ function Home() {
             // If this is the last post, assign the observer ref
             if (posts.length === index + 1) {
               return (
-                <div ref={lastPostElementRef} key={post.id}>
+                <div ref={lastPostElementRef} key={post.ID}>
                   <DisplayPost post={post} />
                 </div>
               );
             } else {
               return (
-                <div key={post.id}>
+                <div key={post.ID}>
                   <DisplayPost post={post} />
                 </div>
               );

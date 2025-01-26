@@ -3,11 +3,12 @@ import Grid from "@mui/material/Grid2";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import header from "../components/Header";
-import { AspectRatio, Margin, Padding } from "@mui/icons-material";
+import { AspectRatio, Margin, Padding, Token } from "@mui/icons-material";
 import SignUp from "../components/SignUp";
 import { Navigate, NavLink, redirect, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import axiosInstance from "../components/AxiosInstance";
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
@@ -16,16 +17,40 @@ const Item = styled(Paper)(({ theme }) => ({
 
 function Login() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState<string>("");
+  const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
 
+  // interface Token {
+  //   Access_Token: string;
+  //   Refresh_Token: string;
+  //   User_id: number;
+  // }
+
   const handleLogin = async () => {
+    console.log(name);
+    console.log(password);
     try {
-      const response = await axios.post("/login", { username, password });
-      console.log("Login success:", response.data);
+      await axiosInstance
+        .post("/api/users/login", {
+          name: name, // Replace with the state variable holding the username
+          password: password, // Replace with the state variable holding the password
+        })
+        .then((response) => {
+          console.log("Login success:", response.data);
+          const info = response.data;
+          console.log("Login ID:", info.User_id);
+          localStorage.setItem("authToken", info.access_token);
+          localStorage.setItem("refreshToken", info.refresh_token);
+          localStorage.setItem("userID", info.user_id);
+        });
+      //  = await axiosInstance.post("/api/users/login", {
+      //   name: username,
+      //   password: password,
+      // });
 
       // Redirect to profile or home page on successful login
+
       navigate("/home");
     } catch (err: any) {
       setError("Invalid credentials. Please try again.");
@@ -68,6 +93,7 @@ function Login() {
                 type="name"
                 variant="outlined"
                 fullWidth
+                onChange={(e) => setName(e.target.value)}
               />
             </Grid>
             <Grid style={{ width: "30%" }} sx={{ mb: 0 }}>
@@ -81,6 +107,7 @@ function Login() {
                 type="password"
                 variant="outlined"
                 fullWidth
+                onChange={(e) => setPassword(e.target.value)}
               />
             </Grid>
             <Grid
@@ -91,17 +118,9 @@ function Login() {
               alignItems={"center"}
             >
               {SignUp()}
-              <Button>Forget Password?</Button>
             </Grid>
             <Grid style={{ width: "30%" }}>
-              <Button
-                variant="contained"
-                fullWidth
-                onClick={handleLogin}
-                // onClick={() => {
-                //   navigate("/home");
-                // }}
-              >
+              <Button variant="contained" fullWidth onClick={handleLogin}>
                 Login
               </Button>
             </Grid>
