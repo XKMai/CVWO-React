@@ -1,7 +1,6 @@
 //Displays a popup with all the details of a User
 
 import {
-  Avatar,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -10,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { User } from "../types/User";
-import GetAvatar from "./GetAvatar";
+import GetAvatarUnclickable from "./GetAvatarUnclickable";
 
 interface Props {
   user: User; // User details to display
@@ -36,7 +35,7 @@ export default function DisplayUser({ user, onClose }: Props) {
       <DialogContent id="user-dialog-description">
         <Grid2 container direction="row" alignItems="center" spacing={2}>
           <Grid2>
-            <GetAvatar user={user} />
+            <GetAvatarUnclickable user={user} />
           </Grid2>
           <Grid2>
             <Typography variant="h5">{user.name || "Anonymous"}</Typography>
