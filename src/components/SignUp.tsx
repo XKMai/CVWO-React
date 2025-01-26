@@ -8,9 +8,9 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
-import axios from "axios";
 import React, { useState } from "react";
 import CheckIcon from "@mui/icons-material/Check";
+import axiosInstance from "./AxiosInstance";
 
 export default function SignUp() {
   const [open, setOpen] = useState(false);
@@ -24,9 +24,10 @@ export default function SignUp() {
   const handleClose = () => {
     setOpen(false);
   };
+
   const postUser = () => {
-    axios
-      .post("./api/auth/register", { name: name, password: password })
+    axiosInstance
+      .post("/api/users/create", { name: name, password: password })
       .then((response) => {
         handleClose();
         <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
@@ -53,9 +54,9 @@ export default function SignUp() {
             name="name"
             label="Name"
             type="name"
+            variant="outlined"
             fullWidth
-            variant="standard"
-            onChange={(event) => setName(event.target.value)}
+            onChange={(e) => setName(e.target.value)} // Update username state
           />
           <TextField
             autoFocus
@@ -65,9 +66,9 @@ export default function SignUp() {
             name="password"
             label="Password"
             type="password"
+            variant="outlined"
             fullWidth
-            variant="standard"
-            onChange={(event) => setPassword(event.target.value)}
+            onChange={(e) => setPassword(e.target.value)} // Update password state
           />
         </DialogContent>
         <DialogActions>
