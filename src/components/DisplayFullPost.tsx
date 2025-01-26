@@ -27,26 +27,26 @@ interface Props {
 
 export default function DisplayFullPost({ post, onClose }: Props) {
   const user = post.user;
-  const [pageNumber, setPageNumber] = useState(0);
+  const [pageNumber, setPageNumber] = useState(1); // Start at page 1
   const { loading, error, comments, hasMore } = UseCommentSearch(
     post.ID,
     pageNumber
   );
 
-  const observer = useRef<IntersectionObserver | null>(null); // Type useRef for IntersectionObserver
-  const lastPostElementRef = useCallback(
+  // Infinite scroll logic with IntersectionObserver
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastCommentRef = useCallback(
     (node: HTMLDivElement | null) => {
-      // Type the node parameter
       if (loading) return;
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          setPageNumber((prevPageNumber) => prevPageNumber + 1);
+          setPageNumber((prev) => prev + 1);
         }
       });
 
-      if (node) observer.current.observe(node); // Observe the node
+      if (node) observer.current.observe(node);
     },
     [loading, hasMore]
   );
@@ -91,25 +91,21 @@ export default function DisplayFullPost({ post, onClose }: Props) {
         <Typography variant="body1" sx={{ marginTop: "16px" }}>
           {post.content}
         </Typography>
+        {/* Map over comments, attach ref to the last one */}
         {comments.map((comment, index) => {
-          // If this is the last comment, assign the observer ref
-          if (comments.length === index + 1) {
-            return (
-              <div ref={lastPostElementRef} key={comment.ID}>
-                <DisplayComment comment={comment} />
-              </div>
-            );
-          } else {
-            return (
-              <div key={post.ID}>
-                <DisplayComment comment={comment} />
-              </div>
-            );
-          }
+          const isLastComment = index === comments.length - 1;
+          return (
+            <div
+              key={comment.ID}
+              ref={isLastComment ? lastCommentRef : undefined}
+            >
+              <DisplayComment comment={comment} />
+            </div>
+          );
         })}
       </DialogContent>
       <DialogActions>
-        <CreateComment post={post} />
+        <CreateComment post_id={post.ID} />
       </DialogActions>
     </Dialog>
   );

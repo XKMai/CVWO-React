@@ -55,9 +55,11 @@ const DisplayPost: React.FC<Props> = ({ post }) => {
           <Typography variant="h5">{post.title}</Typography>
 
           <Typography variant="body1" sx={{ marginTop: 2 }}>
-            {post.content.length > maxChar
-              ? post.content.substring(0, maxChar) + "..."
-              : post.content}
+            {post.content
+              ? post.content.length > maxChar
+                ? post.content.substring(0, maxChar) + "..."
+                : post.content
+              : "(No content)"}
           </Typography>
         </CardContent>
         <CardActions>
