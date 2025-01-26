@@ -11,7 +11,7 @@ interface Props {
 export default function DisplayPostCategories({ post }: Props) {
   return (
     <>
-      {post.category && post.category.length > 0 ? (
+      {post.category && post.category[0] != "" && post.category.length > 0 ? (
         <Grid2
           container
           direction="row"
@@ -27,7 +27,7 @@ export default function DisplayPostCategories({ post }: Props) {
           ))}
         </Grid2>
       ) : (
-        <Typography variant="body2">No categories available</Typography>
+        <></>
       )}
     </>
   );
