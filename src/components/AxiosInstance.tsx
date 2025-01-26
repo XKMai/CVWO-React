@@ -1,8 +1,9 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 // Create an Axios instance with default configurations
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000", // Backend API URL
+  baseURL: "http://localhost:3000", // Backend API URL
   withCredentials: true, // Ensures cookies are sent with requests (important for JWT stored in cookies)
 });
 
@@ -10,13 +11,20 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // Get the JWT access token from cookies (or localStorage, or any other method)
-    const token = document.cookie
-      .split(";")
-      .find((cookie) => cookie.trim().startsWith("accessToken="));
+    const token = localStorage.getItem("authToken");
 
     if (token) {
       // Add Authorization header if token exists
-      config.headers["Authorization"] = `Bearer ${token.split("=")[1]}`;
+      config.headers["Authorization"] = `Bearer ${token}`;
+
+      // Decode the token to extract the userID (or any other claim you need)
+      try {
+        const decodedToken = jwtDecode(token);
+        const userID = (decodedToken as { user_id: string }).user_id; // Assuming userID is a claim in the token
+        console.log("User ID from token:", userID);
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
     }
 
     return config;
