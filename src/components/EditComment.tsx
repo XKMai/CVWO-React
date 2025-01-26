@@ -3,18 +3,11 @@ import { useState } from "react";
 import axiosInstance from "./AxiosInstance";
 import { Comment } from "../types/Comment";
 
-interface EditCommentProps {
-  comment: Comment;
-  open: boolean;
-  handleClose: () => void;
-}
-
-export default function EditComment({
-  comment,
-  open,
-  handleClose,
-}: EditCommentProps) {
+export default function EditComment(comment: Comment) {
   const [content, setContent] = useState<string>(comment?.content || "");
+  const [open, setOpen] = useState(true);
+
+  const handleClose = () => setOpen(false);
 
   const handleSave = () => {
     axiosInstance

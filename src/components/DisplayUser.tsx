@@ -1,7 +1,9 @@
 //Displays a popup with all the details of a User
 
 import {
+  Button,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
   Grid2,
@@ -10,6 +12,7 @@ import {
 } from "@mui/material";
 import { User } from "../types/User";
 import GetAvatarUnclickable from "./GetAvatarUnclickable";
+import EditProfile from "./EditProfile";
 
 interface Props {
   user: User; // User details to display
@@ -48,6 +51,9 @@ export default function DisplayUser({ user, onClose }: Props) {
           {user.description || "No description available."}
         </Typography>
       </DialogContent>
+      <DialogActions>
+        <Button onClick={EditProfile}>Edit</Button>
+      </DialogActions>
     </Dialog>
   );
 }

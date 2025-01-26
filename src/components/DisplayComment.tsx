@@ -1,6 +1,7 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { Comment } from "../types/Comment";
 import GetAvatar from "./GetAvatar";
+import EditComment from "./EditComment";
 
 interface Props {
   comment: Comment;
@@ -19,6 +20,7 @@ const DisplayComment: React.FC<Props> = ({ comment }) => {
       <GetAvatar user={comment.user} />
       <Typography variant="h5">{comment.user.name}</Typography>
       <Typography variant="body1">{comment.content}</Typography>
+      <Button onClick={() => EditComment(comment)}>Edit</Button>
     </Box>
   );
 };

@@ -1,22 +1,20 @@
-//Displays a single post for the stream of posts
-
+import { useState } from "react";
 import {
   Button,
+  Card,
   CardActions,
-  Chip,
-  Grid2,
+  CardContent,
   Menu,
   MenuItem,
+  Typography,
 } from "@mui/material";
-import Card, { CardProps } from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import { useState } from "react";
-import { User } from "../types/User";
+import Grid2 from "@mui/material/Grid2";
 import { Post } from "../types/Post";
 import GetAvatar from "./GetAvatar";
 import DisplayFullPost from "./DisplayFullPost";
 import DisplayPostCategories from "./DisplayPostCategories";
+import EditPost from "./EditPost";
+import DeleteItem from "./DeleteItem";
 
 interface Props {
   post: Post;
@@ -25,17 +23,19 @@ interface Props {
 const DisplayPost: React.FC<Props> = ({ post }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [showFullPost, setShowFullPost] = useState(false);
-  const open = Boolean(anchorEl);
+  // Toggle the edit modal
+  const [editPostOpen, setEditPostOpen] = useState(false);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const openMenu = Boolean(anchorEl);
+  const maxChar = 200;
+
+  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleMenuClose = () => {
     setAnchorEl(null);
   };
-
-  const maxChar = 200; //To limit number of characters in post
 
   return (
     <>
@@ -52,7 +52,10 @@ const DisplayPost: React.FC<Props> = ({ post }) => {
             </Grid2>
           </Grid2>
           <DisplayPostCategories post={post} />
-          <Typography variant="h5">{post.title}</Typography>
+
+          <Typography variant="h5" sx={{ marginTop: 1 }}>
+            {post.title}
+          </Typography>
 
           <Typography variant="body1" sx={{ marginTop: 2 }}>
             {post.content
@@ -62,23 +65,44 @@ const DisplayPost: React.FC<Props> = ({ post }) => {
               : "(No content)"}
           </Typography>
         </CardContent>
+
         <CardActions>
           <Button size="large" onClick={() => setShowFullPost(true)}>
             Read
           </Button>
-          <Button size="small" onClick={handleClick}>
+
+          <Button size="small" onClick={handleMenuClick}>
             Options
           </Button>
-          <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-            <MenuItem onClick={handleClose}>Edit</MenuItem>
-            <MenuItem onClick={handleClose}>Delete</MenuItem>
+          <Menu anchorEl={anchorEl} open={openMenu} onClose={handleMenuClose}>
+            <MenuItem
+              onClick={() => {
+                handleMenuClose();
+                setEditPostOpen(true); // Toggle the edit modal open
+              }}
+            >
+              Edit
+            </MenuItem>
+            <MenuItem onClick={() => DeleteItem(post)}>Delete</MenuItem>
           </Menu>
         </CardActions>
       </Card>
+
+      {/* Full post view */}
       {showFullPost && (
         <DisplayFullPost post={post} onClose={() => setShowFullPost(false)} />
+      )}
+
+      {/* Edit modal - only render when editPostOpen is true */}
+      {editPostOpen && (
+        <EditPost
+          post={post}
+          open={editPostOpen}
+          handleClose={() => setEditPostOpen(false)}
+        />
       )}
     </>
   );
 };
+
 export default DisplayPost;
