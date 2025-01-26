@@ -15,9 +15,9 @@ function isPost(item: Post | Comment): item is Post {
 const DeleteItem: React.FC<Props> = ({ item }) => {
   const handleClick = () => {
     if (isPost(item)) {
-      axios.delete(`/posts/${item.id}`);
+      axios.delete(`/api/protected/posts/${item.ID}`);
     } else {
-      axios.delete(`/comments/${item.id}`);
+      axios.delete(`/api/protected/comments/${item.ID}`);
     }
   };
   return (
