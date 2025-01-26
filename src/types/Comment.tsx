@@ -1,11 +1,8 @@
-import { Post } from "./Post";
 import { User } from "./User";
 
 export interface Comment {
-  id: number;
+  ID: number;
   content: string;
-  userId: number;
+  userID: number;
   user: User;
-  dateTime: string;
-  score: number;
 }

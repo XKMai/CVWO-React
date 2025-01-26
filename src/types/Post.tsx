@@ -1,14 +1,12 @@
 import { User } from "./User";
 
 export interface Post {
-  id: number;
+  ID: number;
   title: string;
   content: string;
   category: string[];
-  userId: number;
+  userID: number;
   user: User;
-  dateTime: string;
-  score: number;
   picture: string;
   comments: Comment[];
 }
