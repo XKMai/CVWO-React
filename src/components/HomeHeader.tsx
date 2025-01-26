@@ -76,7 +76,7 @@ export default function HomeHeader() {
         }}
       >
         <img
-          src="public/MaiSpace.png"
+          src="MaiSpace.png"
           alt="MaiSpace Logo"
           style={{ height: "100%" }}
         />

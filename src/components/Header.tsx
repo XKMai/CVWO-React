@@ -15,10 +15,7 @@ export default function header() {
           color: "white",
         }}
       >
-        <img
-          src="public/MaiSpace.png"
-          style={{ width: "Auto", height: "Auto" }}
-        />
+        <img src="MaiSpace.png" style={{ width: "Auto", height: "Auto" }} />
       </Box>
     </>
   );

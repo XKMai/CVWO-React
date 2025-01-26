@@ -67,7 +67,7 @@ function Login() {
         alignItems={"center"}
       >
         <Box height="90vh" width="50%" overflow={"hidden"}>
-          <img src="public\Mountain.webp" style={{ height: "100%" }} />
+          <img src="Mountain.webp" style={{ height: "100%" }} />
         </Box>
         <Box height="90vh" width="50%">
           <Grid
