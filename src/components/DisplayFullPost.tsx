@@ -29,7 +29,7 @@ export default function DisplayFullPost({ post, onClose }: Props) {
   const user = post.user;
   const [pageNumber, setPageNumber] = useState(0);
   const { loading, error, comments, hasMore } = UseCommentSearch(
-    post,
+    post.ID,
     pageNumber
   );
 
@@ -95,13 +95,13 @@ export default function DisplayFullPost({ post, onClose }: Props) {
           // If this is the last comment, assign the observer ref
           if (comments.length === index + 1) {
             return (
-              <div ref={lastPostElementRef} key={comment.id}>
+              <div ref={lastPostElementRef} key={comment.ID}>
                 <DisplayComment comment={comment} />
               </div>
             );
           } else {
             return (
-              <div key={post.id}>
+              <div key={post.ID}>
                 <DisplayComment comment={comment} />
               </div>
             );
