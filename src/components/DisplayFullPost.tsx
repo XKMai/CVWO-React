@@ -66,7 +66,7 @@ export default function DisplayFullPost({ post, onClose }: Props) {
 
           <IconButton onClick={onClose} sx={{ width: "20px", height: "20px" }}>
             <img
-              src="public\Close Icon.png"
+              src="Close Icon.png"
               alt="close"
               style={{ width: "20px", height: "20px" }}
             />
